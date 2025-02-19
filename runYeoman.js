@@ -91,6 +91,8 @@ async function startServers(frontendFramework, frontendPath, includeBackend, bac
  * 1. Asks user for project details (like Yeoman does).
  * 2. Calls 'yo mywebgen' with CLI args (if your generator supports them).
  * 3. Automatically checks for occupied ports, starts both servers, and opens React in the browser.
+ * 4. Ensures that the frontend uses React 18.2.0.
+ * 5. Removes the backend folder if the user opts out.
  */
 async function main() {
   console.log('Welcome to the Single-File Yeoman Runner + Auto Starter!');
@@ -144,7 +146,29 @@ async function main() {
 
   console.log('\n✅ Yeoman generation complete!');
 
-  // 3) Start servers (React & Express) with port checks and auto-launch browser
+  // 3) If the user opted NOT to include the backend, remove the backend folder if it exists.
+  if (!includeBackend) {
+    if (fs.existsSync(backendPath)) {
+      console.log('\n🗑 Removing Express backend folder since it was not requested...');
+      fs.rmSync(backendPath, { recursive: true, force: true });
+    }
+  }
+
+  // 4) Ensure the correct React version (18.2.0) is installed if React was selected
+  if (frontendFramework === 'React') {
+    console.log('\n🔧 Ensuring React 18.2.0 is installed in the frontend...');
+    const installResult = spawnSync('npm', ['install', 'react@18.2.0', 'react-dom@18.2.0'], {
+      cwd: frontendPath,
+      shell: true,
+      stdio: 'inherit'
+    });
+    if (installResult.status !== 0) {
+      console.error('❌ Failed to install React 18.2.0');
+      process.exit(1);
+    }
+  }
+
+  // 5) Start servers (React & Express) with port checks and auto-launch browser
   await startServers(frontendFramework, frontendPath, includeBackend, backendPath);
 }
 

@@ -69,33 +69,43 @@ module.exports = class extends Generator {
         this.templatePath('frontend/App.js'),
         this.destinationPath('frontend/src/App.js')
       );
-      this.fs.copyTpl(
-        this.templatePath('frontend/main.jsx'),
-        this.destinationPath('frontend/src/main.jsx')
-      );
+      // this.fs.copyTpl(
+      //   this.templatePath('frontend/main.jsx'),
+      //   this.destinationPath('frontend/src/main.jsx')
+      // );
       this.fs.copyTpl(
         this.templatePath('frontend/index.css'),
         this.destinationPath('frontend/src/index.css')
       );
-
-      // Copy pages
       this.fs.copyTpl(
-        this.templatePath('frontend/pages/LandingPage.jsx'),
-        this.destinationPath('frontend/src/pages/LandingPage.jsx')
-      );
-      this.fs.copyTpl(
-        this.templatePath('frontend/pages/ContactPage.jsx'),
-        this.destinationPath('frontend/src/pages/ContactPage.jsx')
+        this.templatePath('frontend/index.html'),
+        this.destinationPath('frontend/public/index.html')
       );
 
-      // Copy components
+      // Copy my components
       this.fs.copyTpl(
-        this.templatePath('frontend/components/Navbar.jsx'),
-        this.destinationPath('frontend/src/components/Navbar.jsx')
+        this.templatePath('frontend/MyComponents/About.js'),
+        this.destinationPath('frontend/src/MyComponents/About.js')
       );
       this.fs.copyTpl(
-        this.templatePath('frontend/components/Footer.jsx'),
-        this.destinationPath('frontend/src/components/Footer.jsx')
+        this.templatePath('frontend/MyComponents/AddTodo.js'),
+        this.destinationPath('frontend/src/MyComponents/AddTodo.js')
+      );
+      this.fs.copyTpl(
+        this.templatePath('frontend/MyComponents/Footer.js'),
+        this.destinationPath('frontend/src/MyComponents/Footer.js')
+      );
+      this.fs.copyTpl(
+        this.templatePath('frontend/MyComponents/Header.js'),
+        this.destinationPath('frontend/src/MyComponents/Header.js')
+      );
+      this.fs.copyTpl(
+        this.templatePath('frontend/MyComponents/TodoItem.js'),
+        this.destinationPath('frontend/src/MyComponents/TodoItem.js')
+      );
+      this.fs.copyTpl(
+        this.templatePath('frontend/MyComponents/Todos.js'),
+        this.destinationPath('frontend/src/MyComponents/Todos.js')
       );
 
       // (Optional) Overwrite CRA's package.json with your custom one
