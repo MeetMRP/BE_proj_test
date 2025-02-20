@@ -88,22 +88,25 @@ async function startServers(frontendFramework, frontendPath, includeBackend, bac
 
 /**
  * This script:
- * 1. Asks user for project details (like Yeoman does).
- * 2. Calls 'yo mywebgen' with CLI args (if your generator supports them).
+ * 1. Asks the user for project details.
+ * 2. Calls the generator with CLI args.
  * 3. Automatically checks for occupied ports, starts both servers, and opens React in the browser.
  * 4. Ensures that the frontend uses React 18.2.0.
  * 5. Removes the backend folder if the user opts out.
  */
 async function main() {
-  console.log('Welcome to the Single-File Yeoman Runner + Auto Starter!');
+  // Display a polished welcome message with ANSI colors
+  console.log('\x1b[36m%s\x1b[0m', '**************************************************');
+  console.log('\x1b[36m%s\x1b[0m', '      Welcome to Jump-Starter Auto Starter!     ');
+  console.log('\x1b[36m%s\x1b[0m', '**************************************************');
 
-  // 1) Ask the same questions Yeoman does
+  // 1) Ask the user for project details (default project name is Jump-Starter)
   const answers = await inquirer.prompt([
     {
       type: 'input',
       name: 'projectName',
       message: 'Enter your project name:',
-      default: 'my-app'
+      default: 'Jump-Starter'
     },
     {
       type: 'list',
@@ -117,15 +120,27 @@ async function main() {
       name: 'includeBackend',
       message: 'Do you want to include an Express backend?',
       default: true
+    },
+    {
+      type: 'input',
+      name: 'userRequirements',
+      message: 'Enter user requirements:',
+      default: 'make a todo app'
     }
   ]);
+
+  // If the user requirements are custom, exit with a message.
+  if (answers.userRequirements !== 'make a todo app') {
+    console.log('\n🤖 Code generation with AI coming soon.');
+    process.exit(0);
+  }
 
   const { projectName, frontendFramework, includeBackend } = answers;
   const projectPath = path.join(process.cwd(), projectName);
   const frontendPath = path.join(projectPath, 'frontend');
   const backendPath = path.join(projectPath, 'backend');
 
-  // 2) Call Yeoman generator: 'yo mywebgen' with CLI args
+  // 2) Call the generator with CLI args (functionality unchanged)
   const cliArgs = [
     'mywebgen',
     `--projectName=${projectName}`,
@@ -133,18 +148,18 @@ async function main() {
     `--includeBackend=${includeBackend}`
   ];
 
-  console.log('\nRunning Yeoman with these arguments:', cliArgs.join(' '));
-  const yeomanResult = spawnSync('yo', cliArgs, {
+  console.log('\nRunning Jump-Starter with these arguments:', cliArgs.join(' '));
+  const generatorResult = spawnSync('yo', cliArgs, {
     stdio: 'inherit',
     shell: true
   });
 
-  if (yeomanResult.status !== 0) {
-    console.error('❌ Yeoman generation failed.');
+  if (generatorResult.status !== 0) {
+    console.error('❌ Generation failed.');
     process.exit(1);
   }
 
-  console.log('\n✅ Yeoman generation complete!');
+  console.log('\n✅ Jump-Starter generation complete!');
 
   // 3) If the user opted NOT to include the backend, remove the backend folder if it exists.
   if (!includeBackend) {
